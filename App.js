@@ -1,14 +1,19 @@
-import { StyleSheet, Text, SafeAreaView } from "react-native";
+import { StyleSheet, Text, SafeAreaView, Pressable, Image, View} from "react-native";
 import { useState, useEffect } from "react";
 import { ResponseType, useAuthRequest } from "expo-auth-session";
 import { myTopTracks, albumTracks } from "./utils/apiOptions";
 import { REDIRECT_URI, SCOPES, CLIENT_ID, ALBUM_ID } from "./utils/constants";
+import colors from "./Themes/colors"
+import images from "./Themes/images"
+
 
 // Endpoints for authorizing with Spotify
 const discovery = {
   authorizationEndpoint: "https://accounts.spotify.com/authorize",
   tokenEndpoint: "https://accounts.spotify.com/api/token"
 };
+
+
 
 export default function App() {
   const [token, setToken] = useState("");
@@ -38,24 +43,69 @@ export default function App() {
       // TODO: Select which option you want: Top Tracks or Album Tracks
 
       // Comment out the one you are not using
-      // myTopTracks(setTracks, token);
+      myTopTracks(setTracks, token);
       albumTracks(ALBUM_ID, setTracks, token);
     }
   }, [token]);
 
+
+  const SpotifyButton = () => {
+    return(<Pressable style={styles.spotify_button} onPress={promptAsync}>
+        <View style={styles.buttonParent}>
+            <View style={styles.buttonChild}>
+                <Image source={images.spotify} style={styles.logo}></Image>
+            </View>
+            <View style={styles.buttonChild}>
+                <Text style={styles.logo_text}>    CONNECT WITH SPOTIFY</Text>
+            </View>
+        </View>
+    </Pressable>);
+  }
+
+  let contentDisplayed = null;
+  if (token) {
+    contentDisplayed = <Text> Hi there mates</Text>
+  } else {
+    contentDisplayed = <SpotifyButton promptAsync={promptAsync}/>
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* TODO */}
-      <Text style={{ color: "white" }}>Welcome to Assignment 3 - Spotify</Text>
+      {contentDisplayed}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+    buttonChild: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center"
+  },
+  buttonParent: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center"
+  },
   container: {
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
     justifyContent: "center",
     alignItems: "center",
     flex: 1
+  },
+  spotify_button: {
+      backgroundColor: colors.spotify,
+      padding: '3%',
+      borderRadius: 9999
+  },
+  logo: {
+      height:20,
+      width: 20
+  },
+  logo_text: {
+      color: "white",
+      fontWeight: "bold"
   }
 });
