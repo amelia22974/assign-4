@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import { ResponseType, useAuthRequest } from "expo-auth-session";
 import { myTopTracks, albumTracks } from "./utils/apiOptions";
 import { REDIRECT_URI, SCOPES, CLIENT_ID, ALBUM_ID } from "./utils/constants";
-import colors from "./Themes/colors"
-import images from "./Themes/images"
+import colors from "./Themes/colors";
+import images from "./Themes/images";
+import TrackList from "./components/TrackList";
 
 
 // Endpoints for authorizing with Spotify
@@ -64,7 +65,8 @@ export default function App() {
 
   let contentDisplayed = null;
   if (token) {
-    contentDisplayed = <Text> Hi there mates</Text>
+    console.log(tracks)
+    contentDisplayed = <TrackList data={tracks}/>
   } else {
     contentDisplayed = <SpotifyButton promptAsync={promptAsync}/>
   }

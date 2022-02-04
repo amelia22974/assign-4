@@ -9,5 +9,5 @@ export const SCOPES = [
   "user-read-email",
   "user-read-private"
 ];
-export const REDIRECT_URI = "exp:// :19000";
+export const REDIRECT_URI = "exp://10.31.72.50:19000";
 export const ALBUM_ID = "TODO: INSERT YOUR ALBUM ID HERE IF YOU ARE USING ONE";
