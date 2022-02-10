@@ -6,6 +6,10 @@ import { REDIRECT_URI, SCOPES, CLIENT_ID, ALBUM_ID } from "./utils/constants";
 import colors from "./Themes/colors";
 import images from "./Themes/images";
 import TrackList from "./components/TrackList";
+import { WebView } from "react-native-webview";
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { roundToNearestPixel } from "react-native/Libraries/Utilities/PixelRatio";
 
 
 // Endpoints for authorizing with Spotify
@@ -15,6 +19,7 @@ const discovery = {
 };
 
 
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [token, setToken] = useState("");
@@ -71,10 +76,41 @@ export default function App() {
     contentDisplayed = <SpotifyButton promptAsync={promptAsync}/>
   }
 
+
+
   return (
-    <SafeAreaView style={styles.container}>
-      {contentDisplayed}
-    </SafeAreaView>
+    <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen options={{headerShown:false}} name="Main">
+            {() => <SafeAreaView style={styles.container}>
+                                              {contentDisplayed}
+                                              </SafeAreaView>}
+          </Stack.Screen> 
+          <Stack.Screen options={{
+                        headerStyle: {
+                        backgroundColor: colors.background,
+                        },
+                        headerTintColor: '#fff',
+                        }} name="Song Details">
+          {({route}) => {
+            const {songData} = route.params;
+            return(<WebView source={{ uri: songData.external_urls.spotify }} />)}}
+          </Stack.Screen>
+          <Stack.Screen options={{
+                        headerStyle: {
+                        backgroundColor: colors.background,
+                        },
+                        headerTintColor: '#fff',
+                        }} name="Preview">
+          {({route}) => {
+            const {songData} = route.params;
+            return(<WebView source={{ uri: songData.preview_url}} />)}}
+          </Stack.Screen>
+        </Stack.Navigator>
+          
+
+    </NavigationContainer>
+
   );
 }
 
@@ -96,6 +132,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1
+  },
+  header:{
+    backgroundColor: "black",
+    color: "white"
   },
   spotify_button: {
       backgroundColor: colors.spotify,

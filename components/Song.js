@@ -1,15 +1,22 @@
-import { StyleSheet, Text, Image, View, Dimensions} from "react-native";
+import { StyleSheet, Text, Image, View, Pressable, Dimensions} from "react-native";
 import { useState, useEffect } from "react";
 import { ResponseType, useAuthRequest } from "expo-auth-session";
 import colors from "../Themes/colors";
 import millisToMinuteSeconds from "../utils/millisToMinuteSeconds";
 import { isRequired } from "react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType";
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Song(props){
+    const navigation = useNavigation();
     return(
-        <View style={styles.trackParent}>
+        <Pressable style={styles.trackParent} onPress={() => navigation.navigate('Song Details',{songData:props.item})}>
             <View style={styles.trackChild}>
-                <Text style={{color: "white"}}>{props.index}</Text>
+            <Pressable onPress={() => navigation.navigate('Preview', { songData:props.item })} >
+                <View>
+                    <Ionicons name="md-play-circle" size={32} color="green" />
+                </View>
+            </Pressable>
             </View>
             <View style={styles.trackChild}>
                 <Image style={styles.tinyLogo} source={ {uri: props.item.album.images[0].url}  }></Image>
@@ -31,7 +38,7 @@ export default function Song(props){
                 <Text style={styles.normText}>{millisToMinuteSeconds(props.item.duration_ms)}</Text>
             </View>
                 
-        </View>
+        </Pressable>
    )
 }
 
